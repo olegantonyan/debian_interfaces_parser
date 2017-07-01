@@ -25,7 +25,7 @@ class Interfaces(object):
                 ifaces.append(iface.Iface(name, src))
                 continue
 
-            cfg_match = re.search('^\s+(address|netmask|gateway|dns-nameservers|wpa-ssid|wpa-psk) (.+)$', line)
+            cfg_match = re.search('(address|netmask|gateway|dns-nameservers|wpa-ssid|wpa-psk) (.+)$', line)
             if cfg_match:
                 key = cfg_match.group(1)
                 value = cfg_match.group(2).strip()
@@ -35,7 +35,7 @@ class Interfaces(object):
                 elif key == 'netmask':
                     ifc.netmask = value
                 elif key == 'dns-nameservers':
-                    ifc.dns_nameservers = [i.strip() for i in value.split(',')]
+                    ifc.dns_nameservers = [i.strip() for i in value.split(' ') if i.strip() != '']
                 elif key == 'gateway':
                     ifc.gateway = value
                 elif key == 'wpa-ssid':

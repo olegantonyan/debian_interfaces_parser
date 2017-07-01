@@ -4,7 +4,7 @@ from setuptools import setup
 
 
 setup(name='debian_interfaces_parser',
-      version='0.0.1',
+      version='0.0.2',
       description='Simple parser for /etc/network/interfaces',
       url='http://github.com/olegantonyan/debian_interfaces_parser',
       author='Oleg Antonyan',

@@ -39,7 +39,7 @@ class Iface(object):
             result += "  gateway {s}\n".format(s=self.gateway)
 
         if len(self.dns_nameservers) > 0:
-            result += "  dns-nameservers {s}\n".format(s=', '.join(self.dns_nameservers))
+            result += "  dns-nameservers {s}\n".format(s=' '.join(self.dns_nameservers))
 
         return result
 
