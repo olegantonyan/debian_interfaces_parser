@@ -5,3 +5,6 @@
 logs/*
 tmp/*
 .idea/
+build/
+dist/
+*.egg-info/

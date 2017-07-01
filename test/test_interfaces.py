@@ -4,25 +4,30 @@ import unittest
 import os
 
 import debian_interfaces_parser.interfaces as interfaces
+import debian_interfaces_parser.iface as iface
 
 
 one_and_two_cases_dump = \
 """auto lo
 iface lo inet loopback
+
 auto eth0:0
 iface eth0:0 inet static
   address 10.10.10.2
   netmask 255.255.255.252
+
 auto eth0
 iface eth0 inet static
   address 192.168.1.170
   netmask 255.255.255.0
   gateway 192.168.1.1
   dns-nameservers 192.168.1.1, 8.8.8.8
+
 auto wlan0
 iface wlan0 inet dhcp
   wpa-ssid hello
   wpa-psk hello_123
+
 """
 
 
@@ -32,9 +37,10 @@ def load_fixture(name):
 
 class InterfacesTest(unittest.TestCase):
     def test_case1(self):
-        self.assertEqual(len(load_fixture('interfaces1').parse_all()), 4)
-        dump = ''
-        for i in load_fixture('interfaces1').parse_all():
+        ifaces = load_fixture('interfaces1').parse_all()
+        self.assertEqual(len(ifaces), 4)
+
+        for i in ifaces:
             self.assertEqual(i.auto, True)
             if i.name == 'lo':
                 self.assertEqual(i.src, 'loopback')
@@ -52,13 +58,14 @@ class InterfacesTest(unittest.TestCase):
                 self.assertEqual(i.src, 'dhcp')
                 self.assertEqual(i.wpa_ssid, 'hello')
                 self.assertEqual(i.wpa_psk, 'hello_123')
-            dump += i.dump()
-        self.assertEqual(dump, one_and_two_cases_dump)
+
+        self.assertEqual(interfaces.Interfaces.dump_all(ifaces), one_and_two_cases_dump)
 
     def test_case2(self):
-        self.assertEqual(len(load_fixture('interfaces2').parse_all()), 4)
-        dump = ''
-        for i in load_fixture('interfaces2').parse_all():
+        ifaces = load_fixture('interfaces2').parse_all()
+        self.assertEqual(len(ifaces), 4)
+
+        for i in ifaces:
             self.assertEqual(i.auto, True)
             if i.name == 'lo':
                 self.assertEqual(i.src, 'loopback')
@@ -76,6 +83,10 @@ class InterfacesTest(unittest.TestCase):
                 self.assertEqual(i.src, 'dhcp')
                 self.assertEqual(i.wpa_ssid, 'hello')
                 self.assertEqual(i.wpa_psk, 'hello_123')
-            dump += i.dump()
-        self.assertEqual(dump, one_and_two_cases_dump)
+
+        self.assertEqual(interfaces.Interfaces.dump_all(ifaces), one_and_two_cases_dump)
+
+    def test_case3(self):
+        with self.assertRaises(iface.InvalidIface):
+            load_fixture('interfaces3').parse_all()
 

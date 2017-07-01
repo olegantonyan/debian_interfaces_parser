@@ -6,7 +6,7 @@ import debian_interfaces_parser.iface as iface
 
 
 class Interfaces(object):
-    def __init__(self, path):
+    def __init__(self, path='/etc/network/interfaces'):
         self.path = path
         self.data = self.read().strip()
 
@@ -51,8 +51,22 @@ class Interfaces(object):
         for i in ifaces:
             if i.name in autos:
                 i.auto = True
+            i.validate()
 
         return ifaces
+
+    def write(self, data):
+        with open(self.path, 'w') as f:
+            return f.write(data)
+
+    @staticmethod
+    def dump_all(interfaces):
+        result = ''
+        for i in interfaces:
+            result += i.dump()
+            result += '\n'
+
+        return result
 
 
 

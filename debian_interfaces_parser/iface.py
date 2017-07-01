@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
+class InvalidIface(RuntimeError):
+    pass
+
+
 class Iface(object):
     def __init__(self, name, src):
-        self.src = src  # static or dhcp
+        self.src = src  # static or dhcp or loopback
         self.name = name
         self.netmask = None
         self.gateway = None
@@ -26,10 +30,7 @@ class Iface(object):
         if self.src == 'dhcp' or self.src == 'loopback':
             return result
 
-        if not self.address:
-            raise RuntimeError('static interface must have address')
-        if not self.netmask:
-            raise RuntimeError('static interface must have netmask')
+        self.validate()
 
         result += "  address {s}\n".format(s=self.address)
         result += "  netmask {s}\n".format(s=self.netmask)
@@ -41,6 +42,13 @@ class Iface(object):
             result += "  dns-nameservers {s}\n".format(s=', '.join(self.dns_nameservers))
 
         return result
+
+    def validate(self):
+        if self.src == 'static':
+            if not self.address:
+                raise InvalidIface('static interface must have address')
+            if not self.netmask:
+                raise InvalidIface('static interface must have netmask')
 
 
 
