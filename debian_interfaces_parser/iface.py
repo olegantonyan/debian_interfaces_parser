@@ -20,26 +20,26 @@ class Iface(object):
     def dump(self):
         result = ''
         if self.auto:
-            result += "auto {name}\n".format(name=self.name)
-        result += "iface {name} inet {src}\n".format(name=self.name, src=self.src)
+            result += "auto {name}\n".format(name=self.name.strip())
+        result += "iface {name} inet {src}\n".format(name=self.name, src=self.src.strip())
 
         if self.wpa_ssid and self.wpa_psk:
-            result += "  wpa-ssid {s}\n".format(s=self.wpa_ssid)
-            result += "  wpa-psk {s}\n".format(s=self.wpa_psk)
+            result += "  wpa-ssid {s}\n".format(s=self.wpa_ssid.strip())
+            result += "  wpa-psk {s}\n".format(s=self.wpa_psk.strip())
 
         if self.src == 'dhcp' or self.src == 'loopback':
             return result
 
         self.validate()
 
-        result += "  address {s}\n".format(s=self.address)
-        result += "  netmask {s}\n".format(s=self.netmask)
+        result += "  address {s}\n".format(s=self.address.strip())
+        result += "  netmask {s}\n".format(s=self.netmask.strip())
 
         if self.gateway:
-            result += "  gateway {s}\n".format(s=self.gateway)
+            result += "  gateway {s}\n".format(s=self.gateway.strip())
 
         if len(self.dns_nameservers) > 0:
-            result += "  dns-nameservers {s}\n".format(s=' '.join(self.dns_nameservers))
+            result += "  dns-nameservers {s}\n".format(s=' '.join([i.strip() for i in self.dns_nameservers]))
 
         return result
 
